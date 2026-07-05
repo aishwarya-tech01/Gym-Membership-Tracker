@@ -1,54 +1,59 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
-from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
-        port=3306,
         user="root",
-        password="", 
+        password="",
         database="gym_billing_db"
     )
 
-@app.route("/")
-def dashboard():
+@app.route('/', methods=['GET'])
+def index():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     
-    cursor.execute("SELECT * FROM Members ORDER BY expiry_date ASC")
+    search_query = request.args.get('search', '')
+    if search_query:
+        sql = "SELECT * FROM members WHERE name LIKE %s OR phone LIKE %s"
+        cursor.execute(sql, (f"%{search_query}%", f"%{search_query}%"))
+    else:
+        cursor.execute("SELECT * FROM members")
+        
     members = cursor.fetchall()
-    
-    cursor.execute("SELECT SUM(price) as total_revenue FROM Members")
-    revenue_result = cursor.fetchone()
-    total_revenue = revenue_result['total_revenue'] if revenue_result['total_revenue'] else 0
-
     cursor.close()
     conn.close()
-    
-    return render_template("index.html", members=members, total_revenue=total_revenue)
+    return render_template('index.html', members=members, search_query=search_query)
 
-@app.route("/add", methods=["POST"])
+@app.route('/add', methods=['POST'])
 def add_member():
-    full_name = request.form.get("full_name")
-    plan_type = request.form.get("plan_type")
+    name = request.form['name']
+    phone = request.form['phone']
+    membership_type = request.form['membership_type']
     
-    join_date = datetime.now().date()
-    price = 50.00 if plan_type == 'Monthly' else 500.00
-    expiry_date = join_date + (timedelta(days=30) if plan_type == 'Monthly' else timedelta(days=365))
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Members (full_name, plan_type, price, join_date, expiry_date) VALUES (%s, %s, %s, %s, %s)", 
-                   (full_name, plan_type, price, join_date, expiry_date))
-    
+    cursor.execute(
+        "INSERT INTO members (name, phone, membership_type) VALUES (%s, %s, %s)",
+        (name, phone, membership_type)
+    )
     conn.commit()
     cursor.close()
     conn.close()
-    
-    return redirect("/")
+    return redirect(url_for('index'))
 
-if __name__ == "__main__":
+@app.route('/delete/<int:member_id>', methods=['GET'])
+def delete_member(member_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM members WHERE id = %s", (member_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('index'))
+
+if __name__ == '__main__':
     app.run(debug=True)

@@ -1,33 +1,31 @@
 import mysql.connector
 
-def get_db_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        port=3306,
-        user="root",
-        password="", 
-        database="gym_billing_db"
+# Connect directly to XAMPP MySQL Server instance
+conn = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password=""
+)
+cursor = conn.cursor()
+
+# Initialize clean database structure
+cursor.execute("CREATE DATABASE IF NOT EXISTS gym_billing_db")
+cursor.execute("USE gym_billing_db")
+
+# Drop old version of table to ensure structure upgrades cleanly
+cursor.execute("DROP TABLE IF EXISTS members")
+
+# Create fresh layout with proper columns
+cursor.execute("""
+    CREATE TABLE members (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        phone VARCHAR(15) NOT NULL,
+        membership_type VARCHAR(50) NOT NULL
     )
+""")
 
-def setup_database():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    # Create Members table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Members (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            full_name VARCHAR(100),
-            plan_type VARCHAR(50),
-            price DECIMAL(10, 2),
-            join_date DATE,
-            expiry_date DATE
-        )
-    """)
-    
-    print("Database and table successfully created!")
-    cursor.close()
-    conn.close()
+print("SUCCESS: Database 'gym_billing_db' and table 'members' built cleanly!")
 
-if __name__ == "__main__":
-    setup_database()
+cursor.close()
+conn.close()
