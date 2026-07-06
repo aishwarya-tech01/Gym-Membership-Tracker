@@ -1,6 +1,6 @@
 import mysql.connector
 
-# Connect directly to XAMPP MySQL Server instance
+# Connect to XAMPP MySQL server
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -8,24 +8,27 @@ conn = mysql.connector.connect(
 )
 cursor = conn.cursor()
 
-# Initialize clean database structure
+# Create the database if it doesn't exist
 cursor.execute("CREATE DATABASE IF NOT EXISTS gym_billing_db")
 cursor.execute("USE gym_billing_db")
 
-# Drop old version of table to ensure structure upgrades cleanly
+# Drop the old table to upgrade to the new feature columns cleanly
 cursor.execute("DROP TABLE IF EXISTS members")
 
-# Create fresh layout with proper columns
+# Create the updated table structure
 cursor.execute("""
     CREATE TABLE members (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         phone VARCHAR(15) NOT NULL,
-        membership_type VARCHAR(50) NOT NULL
+        membership_type VARCHAR(50) NOT NULL,
+        amount_paid INT NOT NULL,
+        join_date DATE NOT NULL,
+        expiry_date DATE NOT NULL
     )
 """)
 
-print("SUCCESS: Database 'gym_billing_db' and table 'members' built cleanly!")
+print("SUCCESS: New upgraded database schema built flawlessly!")
 
 cursor.close()
 conn.close()
