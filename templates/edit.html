@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Member Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow p-4 bg-white">
+                    <h3 class="fw-bold text-dark mb-4">✏️ Modify Member Profile</h3>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Full Name</label>
+                            <input type="text" name="name" value="{{ member.name }}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Phone Number</label>
+                            <input type="text" name="phone" value="{{ member.phone }}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Membership Plan</label>
+                            <select name="membership_type" class="form-select">
+                                <option {% if member.membership_type == 'Monthly Plan' %}selected{% endif %}>Monthly Plan</option>
+                                <option {% if member.membership_type == 'Quarterly Plan' %}selected{% endif %}>Quarterly Plan</option>
+                                <option {% if member.membership_type == 'Yearly Gold Plan' %}selected{% endif %}>Yearly Gold Plan</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Amount Paid (₹)</label>
+                            <input type="number" name="amount_paid" value="{{ member.amount_paid }}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-secondary">Join Date</label>
+                            <input type="date" name="join_date" value="{{ member.join_date }}" class="form-control" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-secondary">Expiry Date</label>
+                            <input type="date" name="expiry_date" value="{{ member.expiry_date }}" class="form-control" required>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success w-100 fw-bold">Save Updates</button>
+                            <a href="/" class="btn btn-light border w-100 fw-bold">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

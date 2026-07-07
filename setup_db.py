@@ -8,14 +8,14 @@ conn = mysql.connector.connect(
 )
 cursor = conn.cursor()
 
-# Create the database if it doesn't exist
 cursor.execute("CREATE DATABASE IF NOT EXISTS gym_billing_db")
 cursor.execute("USE gym_billing_db")
 
-# Drop the old table to upgrade to the new feature columns cleanly
+# Drop tables to clear out the old mismatched structure cleanly
+cursor.execute("DROP TABLE IF EXISTS attendance")
 cursor.execute("DROP TABLE IF EXISTS members")
 
-# Create the updated table structure
+# 1. Create Upgraded Members Table
 cursor.execute("""
     CREATE TABLE members (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -28,7 +28,17 @@ cursor.execute("""
     )
 """)
 
-print("SUCCESS: New upgraded database schema built flawlessly!")
+# 2. Create Attendance Table
+cursor.execute("""
+    CREATE TABLE attendance (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        member_id INT NOT NULL,
+        check_in_time DATETIME NOT NULL,
+        FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
+    )
+""")
+
+print("SUCCESS: Advanced relational database tables built successfully!")
 
 cursor.close()
 conn.close()
