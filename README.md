@@ -7,11 +7,14 @@ A comprehensive, full-stack fitness center management application built with Pyt
 * **Smart Date Logic:** Automatically calculates membership expiration dates based on the selected tier (Monthly or Yearly) using Python's `datetime` logic.
 * **Automated Expiration Flags:** Proactively identifies and highlights members whose subscriptions are expiring within the next 7 days using SQL interval queries.
 * **Financial Aggregation:** Utilizes SQL `SUM` aggregations to instantly calculate and display the total generated monthly and yearly revenue.
+* **Attendance Logger:** Efficiently track daily gym traffic and maintain a record of member visits.
+* **CSV Export:** Generate and download reports of your member database for external record-keeping and analysis.
 
 ## 💻 Technologies Used
 * **Backend:** Python 3, Flask Web Framework
 * **Database:** MySQL, `mysql-connector-python`
-* **Frontend:** HTML5, CSS3, Jinja2 Templating
+* **Frontend:** HTML5, CSS3, Jinja2 Templating, Bootstrap
+* **Environment Management:** Python Virtual Environment (`venv`)
 
 ## ⚙️ How to Run Locally
 
