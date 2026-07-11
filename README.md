@@ -12,9 +12,9 @@ A comprehensive, full-stack fitness center management application built with Pyt
 
 ## 💻 Technologies Used
 * **Backend:** Python 3, Flask Web Framework
-* **Database:** MySQL, `mysql-connector-python`
-* **Frontend:** HTML5, CSS3, Jinja2 Templating, Bootstrap
-* **Environment Management:** Python Virtual Environment (`venv`)
+* **Database:** MySQL, `mysql-connector-python`.
+* **Frontend:** HTML5, CSS3, Jinja2 Templating, Bootstrap.
+* **Environment Management:** Python Virtual Environment (`venv`).
 
 ## ⚙️ How to Run Locally
 
